@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+    <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+
+    <title>Register</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+  </head>
+<body>
+  <!-- <body style="overflow: hidden"> -->
+
+    <header>
+     <div class="navbar-fixed" style="z-index: 9999;">
+          <nav role="navigation" style="background-color: #000000">
+            <div class="nav-wrapper container center-align" style="font-size:25px">Register to C-Rash
+            </div>
+          </nav>
+      </div>
+    </header>
+
+
+
+    <main class="center-align">
+
+
+        <div class="row" style="margin-bottom : -10px; margin-top:15px">
+            <div class="col s12 m12 l6 left-align" style="display: inline-block; float: none">
+                <p style="margin:0; font-size:22px"><b>Personal Details</b></p>
+            </div>
+        </div>
+
+        <form class="form-horizontal" action="extraprocess.php" method="POST">
+
+        <div class="row">
+          <div class="col s12 m12 l6 center-align" style="display: inline-block; float: none">
+
+              <div class="row valign-wrapper" style="margin:0">
+                <div class="col s3 m2 l2" style="padding-right:0; margin-top:30px;">
+                  <img src="<?php echo $_SESSION['thumb']; ?>" alt="Google/FB Profile Image" class="circle responsive-img"> <!-- notice the "circle" class -->
+                </div>
+                <div class="col s9 m8 l7">
+                        <input id="name" name="name" type="text" style="margin:5px" placeholder="Name">
+                        <input id="name" name="phone" type="text" style="margin:5px" placeholder="Phone Number">
+                </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-bottom : -5px; margin-top: -10px">
+            <div class="col s12 m12 l6 left-align" style="margin-top:30px; display: inline-block; float: none">
+                <p style="margin:0; font-size:22px"><b>Registration</b></p>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:5px">
+          <div class="col s12 m12 l6 center-align" style="display: inline-block; float: none">
+                <input id="name" name="username" type="text" style="margin:5px" placeholder="Username">
+                <input id="name" name="password" type="password" style="margin:5px" placeholder="Password">
+                <input id="name" name="passwordrpt" type="password" style="margin:5px" placeholder="Re-Enter Password">
+                <br><br>
+                <div style="margin-left:30px">
+                    <input type="checkbox" id="chigup"><label for="chigup" style="line-height:23px; padding-left:26px; color:black; font-size:18px">Confirm</label>
+
+                    <a href="register_check.html" style="font-size:10px; color:#aaa; margin-left:10px" target="_blank">Terms and Conditions</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col s12 m12 l6 center-align" style="display: inline-block; float: none ">
+                <button id="register" type="submit" class="waves-effect waves-light btn-large" style="width:50%; font-size:17px; margin-bottom:20px; margin-top:20px; background-color:#000000; height:50px">Register</a>
+            </div>
+        </div>
+
+      <script type="text/javascript">
+          $(document).ready(function(){
+              $('#register').click(function(e) {
+                if($('input[type="checkbox"]').is(":not(:checked)")) {
+                    alert("Please Confirm to the terms and conditions!");
+                    e.preventDefault();
+                    return false;
+                }
+              });
+          });
+      </script>
+        </form>
+
+
+    </main>
+
+      <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="js/materialize.js"></script>
+    <script src="js/init.js"></script>
+    <script>  $(document).ready(function(){
+    $('.collapsible').collapsible();
+    });</script>
+  </body>
+</html>
