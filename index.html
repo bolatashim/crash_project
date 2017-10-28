@@ -49,6 +49,7 @@
 
       var map=null;
       var selectedTrashId = null;
+      var selectedMarker=null;
 
       /**
       * Starting point for running the program. Authenticates the user.
@@ -163,6 +164,7 @@
 
           marker.addListener('click', function(e) {
               selectedTrashId = key;
+              selectedMarker = marker;
               popUpButtons();
           });
       }
@@ -267,6 +269,21 @@
         });
       }
       function changeTypeTrash(type){
+          var iconUrl;
+
+          if(type === 'full'){
+              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored.png?alt=media&token=ef0f6eac-5edb-48f4-9317-6e7213529ea4';
+          }
+          else if(type === 'empty'){
+              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty.png?alt=media&token=c0a29f10-714f-414a-b9ac-5ac9809d9cdf';
+          }
+          else{
+              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown.png?alt=media&token=ed92779a-0feb-4213-9857-3a6af0343794';
+          }
+
+          selectedMarker.setIcon(iconUrl);
+
+
           var child = firebase.child('pos');
 
           // Get a key for a new Post.
