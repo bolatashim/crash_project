@@ -33,7 +33,8 @@
         sender: null,
         timestamp: null,
         lat: null,
-        lng: null
+        lng: null,
+        type: null,
       };
 
       /**
@@ -54,6 +55,7 @@
       /**
        * Creates a map object with a click listener and a heatmap.
        */
+
       function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 33.5003211, lng: 126.5300339},
@@ -87,8 +89,9 @@
                     var marker = new google.maps.Marker({
                         position: pos,
                         map: map,
+                        draggable: true,
                         icon: {
-                            url: 'http://clipartist.net/social/clipartist.net/G/places_pin_icon-555px.png'
+                            url: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/134893/pin-red.svg'
                         }
                     });
 
@@ -114,18 +117,34 @@
 
         initAuthentication(initFirebase.bind(undefined, heatmap));
         // load locations informations
-        var loc = firebase.child('locations');
+        var loc = firebase.child('pos');
 
         loc.once("value", function(snapshot) {
             snapshot.forEach(function(child) {
-                var latLng = new google.maps.LatLng(child.val().lat,child.val().lng);
+                var receivedData = child.val();
+                var latLng = new google.maps.LatLng(receivedData.lat,receivedData.lng);
+
+                var iconUrl;
+
+                if(receivedData.type === 'full'){
+                    iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored.png?alt=media&token=ef0f6eac-5edb-48f4-9317-6e7213529ea4';
+                }
+                else if(receivedData.type === 'empty'){
+                    iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty.png?alt=media&token=c0a29f10-714f-414a-b9ac-5ac9809d9cdf';
+                }
+                else{
+                    iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown.png?alt=media&token=ed92779a-0feb-4213-9857-3a6af0343794';
+                }
+
                 var marker = new google.maps.Marker({
                     position: latLng,
                     map: map,
-                    draggable: true,
                     icon: {
-                        url: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/134893/pin-red.svg'
+                        url: iconUrl
                     }
+                });
+                marker.addListener('click', function() {
+                    popUpButtons();
                 });
             });
         });
@@ -146,7 +165,7 @@
         var startTime = new Date().getTime() - (60 * 10 * 1000);
 
         // Reference to the clicks in Firebase.
-        var clicks = firebase.child('locations');
+        var clicks = firebase.child('pos');
 
         // Listener for when a click is added.
         clicks.orderByChild('timestamp').startAt(startTime).on('child_added',
@@ -180,6 +199,9 @@
           }
           heatmapData.removeAt(i);
         });
+      }
+      function popUpButtons(){
+          console.log("popup!!!");
       }
 
       /**
@@ -217,7 +239,7 @@
         getTimestamp(function(timestamp) {
           // Add the new timestamp to the record data.
           data.timestamp = timestamp;
-          var ref = firebase.child('locations').push(data, function(err) {
+          var ref = firebase.child('pos').push(data, function(err) {
             if (err) {  // Data was not written to firebase.
               console.warn(err);
             }
