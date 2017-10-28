@@ -1,105 +1,150 @@
 <!DOCTYPE html>
 <html >
-<head>
-  <meta charset="UTF-8">
-  <title>Leaderboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
-<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+    <head>
+        <meta charset="UTF-8">
+        <title>Leaderboard</title>
+        <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+        <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
-  
-      <link rel="stylesheet" href="css/leader.css">
 
-  
-</head>
+        <link rel="stylesheet" href="css/leader.css">
 
-<body>
-   -<div class="card">
-	<section class="card-info card-section">
-		<i class="ion-navicon menu"></i>
-		
-		<div class="avatar row">
-		</div>
-		<section class="user row">
-			<h1 class="user-header">
-				Dae-jeon
-				<h2 class="sub header">
-					7 Left to Next Rank
-				</h2>
-			</h1>
-		</section>
-		
-		<section class="statistics">
-			<article class="statistic">
-				<h4 class="statistic-title">
-					Rank
-				</h4>
-				<h3 class="statistic-value">
-					5th
-				</h3>
-			</article>
-			
-			<article class="statistic">
-				<h4 class="statistic-title">
-					Score
-				</h4>
-				<h3 class="statistic-value">
-					493
-				</h3>
-			</article>
-		</section>
-		                <dl class="leaderboard">
-                        <dt>
-                                <article class="progress">
-                                  <section class="progress-bar" style="width: 100%;"></section>
-                                </article>
-                        </dt>
-                        <dd>
-                                <div class="leaderboard-name">Jeju</div>
-                                <div class="leaderboard-value">3000</div>
-                        </dd>
-                        <dt>
-                                <article class="progress">
-                                  <section class="progress-bar" style="width: 60%;"></section>
-                                </article>
-                        </dt>
-                        <dd>
-                                <div class="leaderboard-name">Seoul</div>
-                                <div class="leaderboard-value">2000</div>
-                        </dd>
-                        <dt>
-                                <article class="progress">
-                                  <section class="progress-bar" style="width: 33%;"></section>
-                                </article>
-                        </dt>
-                        <dd>
-                                <div class="leaderboard-name">Kyung-gi</div>
-                                <div class="leaderboard-value">1000</div>
-                        </dd>
-                        <dt>
-                                <article class="progress">
-                                  <section class="progress-bar" style="width: 15%;"></section>
-                                </article>
-                        </dt>
-                        <dd>
-                                <div class="leaderboard-name">Kang-won</div>
-                                <div class="leaderboard-value">500</div>
-                        </dd>
-                        <dt>
-                                <article class="progress">
-                                  <section class="progress-bar" style="width: 14%;"></section>
-                                </article>
-                        </dt>
-                        <dd>
-                                <div class="leaderboard-name">Daejun</div>
-                                <div class="leaderboard-value">493</div>
-                        </dd>
+
+    </head>
+
+    <body>
+         <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+
+
+        <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
+            <script>
+/**
+* Reference to Firebase database.
+ * @const
+
+ */
+            var firebase = new Firebase('https://crashproject-6d234.firebaseio.com/');
+
+            /**
+             * Data object to be written to Firebase.
+             */
+            var data = {
+                id: null,
+                point: null,
+                group: null,
+                loc: null,
+            };
+        function initAuthentication(onAuthSuccess) {
+            firebase.authAnonymously(function(error, authData) {
+                if (error) {
+                    console.log('Login Failed!', error);
+                } else {
+                    data.sender = authData.uid;
+                    onAuthSuccess();
+                }
+            }, {remember: 'sessionOnly'});  // Users will get a new id for every session.
+        }
+        var loc = firebase.child('users');
+        var bucket ={}
+        loc.once("value", function(snapshot) {
+            var content = '';
+            snapshot.forEach(function(child) {
+                var apple= child.val();
+                console.log(apple);
+            });
+            $('#ex-table').append(content);
+        });
+
+            </script>
+        <div class="card">
+
+            <section class="card-info card-section">
+                <i class="ion-navicon menu"></i>
+
+                <div class="avatar row">
+                </div>
+                <section class="user row">
+                    <h1 class="user-header">
+                        Dae-jeon
+                        <h2 class="sub header">
+                            7 Left to Next Rank
+                        </h2>
+                    </h1>
+                </section>
+
+                <section class="statistics">
+                    <article class="statistic">
+                        <h4 class="statistic-title">
+                            Rank
+                        </h4>
+                        <h3 class="statistic-value">
+                            5th
+                        </h3>
+                    </article>
+
+                    <article class="statistic">
+                        <h4 class="statistic-title">
+                            Score
+                        </h4>
+                        <h3 class="statistic-value">
+                            493
+                        </h3>
+                    </article>
+                </section>
+                <dl class="leaderboard">
+                    <dt>
+                    <article class="progress">
+                        <section class="progress-bar" style="width: 100%;"></section>
+                    </article>
+                    </dt>
+                    <dd>
+                    <div class="leaderboard-name">Jeju</div>
+                    <div class="leaderboard-value">3000</div>
+                    </dd>
+                    <dt>
+                    <article class="progress">
+                        <section class="progress-bar" style="width: 60%;"></section>
+                    </article>
+                    </dt>
+                    <dd>
+                    <div class="leaderboard-name">Seoul</div>
+                    <div class="leaderboard-value">2000</div>
+                    </dd>
+                    <dt>
+                    <article class="progress">
+                        <section class="progress-bar" style="width: 33%;"></section>
+                    </article>
+                    </dt>
+                    <dd>
+                    <div class="leaderboard-name">Kyung-gi</div>
+                    <div class="leaderboard-value">1000</div>
+                    </dd>
+                    <dt>
+                    <article class="progress">
+                        <section class="progress-bar" style="width: 15%;"></section>
+                    </article>
+                    </dt>
+                    <dd>
+                    <div class="leaderboard-name">Kang-won</div>
+                    <div class="leaderboard-value">500</div>
+                    </dd>
+                    <dt>
+                    <article class="progress">
+                        <section class="progress-bar" style="width: 14%;"></section>
+                    </article>
+                    </dt>
+                    <dd>
+                    <div class="leaderboard-name">Daejun</div>
+                    <div class="leaderboard-value">493</div>
+                    </dd>
                 </dl>
-	</section>
-</div>
-  
-  
-</body>
+            </section>
+        </div>
+
+
+    </body>
 </html>
