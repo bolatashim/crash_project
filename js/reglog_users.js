@@ -36,8 +36,8 @@ $(document).ready(function() {
       id: user.email,
       point: 0,
       group: "Daejeon",
-      lng: 100,
-      lat: 100
+      lng: 50,
+      lat: 50
     });
 
     window.location="index.html"

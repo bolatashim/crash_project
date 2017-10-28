@@ -52,16 +52,25 @@
       </div>
     </header>
 
+
     <div id="map"></div>
 
-    <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
     <script>
       /**
       * Reference to Firebase database.
       * @const
       */
-      var firebase = new Firebase('https://crashproject-6d234.firebaseio.com/');
+  var config = {
+    apiKey: "AIzaSyDtNA7S1roeuXiyO6nKReBxuvc7va5OEUY",
+    authDomain: "crashproject-6d234.firebaseapp.com",
+    databaseURL: "https://crashproject-6d234.firebaseio.com/",
+    storageBucket: "crashproject-6d234.appspot.com"
+  };
+  firebase.initializeApp(config);
 
+  var database = firebase.database();
+  
       /**
       * Data object to be written to Firebase.
       */
@@ -98,14 +107,6 @@
       }
 
       function initAuthentication(onAuthSuccess) {
-        firebase.authAnonymously(function(error, authData) {
-          if (error) {
-            console.log('Login Failed!', error);
-          } else {
-            data.sender = authData.uid;
-            onAuthSuccess();
-          }
-        }, {remember: 'sessionOnly'});  // Users will get a new id for every session.
       }
 
       /**
@@ -173,16 +174,21 @@
 
         initAuthentication(initFirebase.bind(undefined, heatmap));
         // load locations informations
-        var loc = firebase.child('pos');
+        var loc = database.ref("pos");
 
         loc.once("value", function(snapshot) {
             snapshot.forEach(function(child) {
                 var receivedData = child.val();
                 var latLng = new google.maps.LatLng(receivedData.lat,receivedData.lng);
 
-                addTrashMarker(latLng, receivedData.type, child.key(), map);
+                addTrashMarker(latLng, receivedData.type, child.key, map);
             });
         });
+
+
+
+
+
       }
 
       function addTrashMarker(pos, type, key, map){
@@ -253,31 +259,6 @@
           $('#modal1').modal('open');
       }
 
-      /**
-       * Updates the last_message/ path with the current timestamp.
-       * @param {function(Date)} addClick After the last message timestamp has been updated,
-       *     this function is called with the current timestamp to add the
-       *     click to the firebase.
-       */
-      function getTimestamp(addClick) {
-        // Reference to location for saving the last click time.
-        var ref = firebase.child('last_message/' + data.sender);
-
-        ref.onDisconnect().remove();  // Delete reference from firebase on disconnect.
-
-        // Set value to timestamp.
-        ref.set(Firebase.ServerValue.TIMESTAMP, function(err) {
-          if (err) {  // Write to last message was unsuccessful.
-            console.log(err);
-          } else {  // Write to last message was successful.
-            ref.once('value', function(snap) {
-              addClick(snap.val());  // Add click with same timestamp.
-            }, function(err) {
-              console.warn(err);
-            });
-          }
-        });
-      }
 
       /**
        * Adds a click to firebase.
@@ -290,17 +271,15 @@
               lat : data.lat,
               lng : data.lng,
           };
-        getTimestamp(function(timestamp) {
           // Add the new timestamp to the record data.
-          data.timestamp = timestamp;
+          data.timestamp = new Date().getTime();
 
-          var ref = firebase.child('pos').push(data, function(err) {
+          var ref = database.ref('pos').push(data, function(err) {
             if (err) {  // Data was not written to firebase.
               console.warn(err);
             }
           });
-          addTrashMarker(latLng, "unknown", ref.key(), map);
-        });
+          addTrashMarker(latLng, "unknown", ref.key, map);
       }
       function changeTypeTrash(){
           var type = "unknown";
@@ -368,6 +347,8 @@
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZudCkhX8Okld9JFRnd-_IV9Y4uznZbM8&libraries=visualization&callback=initMap">
     </script>
+
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="js/materialize.js"></script>
     <script src="js/init.js"></script>
