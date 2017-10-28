@@ -24,8 +24,10 @@ $(document).ready(function() {
     const pass = txtpassword.value;
     const auth = firebase.auth();
     const promise = auth.signInWithEmailAndPassword(email, pass);
-    promise.catch(e => console.log(e.message));
-    window.location="index.html";
+    promise
+      .then(user => window.location="index.html")
+      .catch(e => console.log(e.message));
+      
   });
 
   //registration event listener
