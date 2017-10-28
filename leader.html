@@ -20,7 +20,7 @@
     </head>
 <header>
      <div class="navbar-fixed" style="z-index: 9999;">
-          <nav style="background-color: black">
+          <nav>
             <div class="nav-wrapper container center-align" style="margin:0; padding:0; width:100%;"><a id="logo-container" href="#" class="brand-logo" style="color: white;">Leaderboard</a>
 
               <ul id="slide-out" class="side-nav fixed">
@@ -36,16 +36,15 @@
                 <li><a class="waves-effect" href="index.html">Map</a></li>
                 <li><a class="waves-effect" href="mypage.html">Mypage</a></li>
                 <li><a class="waves-effect" href="#">Leaderboard</a></li>
-                <li><a class="waves-effect" href="#!">Updates</a></li>
               </ul>
               <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons" style="color: white">menu</i></a>
 
             </div>
           </nav>
-      </div>  
+      </div>
 </header>
     <body>
-         
+
 
         <div class="container">
                         <table class="bordered striped">
@@ -77,7 +76,7 @@
         <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script src="js/materialize.js"></script>
 
-        
+
         <script>
 
         $(function(){
@@ -92,31 +91,31 @@
           databaseURL: "https://crashproject-6d234.firebaseio.com/",
           storageBucket: "crashproject-6d234.appspot.com"
         };
-        
+
         firebase.initializeApp(config);
         var database = firebase.database();
         var usersref = database.ref("users");
 
         var grref = database.ref("groups");
-        
+
 
         var userobjects = [];
         var citymap = {
-          Jeju: 0, 
-          Daejeon: 1, 
-          Seoul: 2, 
-          Busan : 3, 
-          Daegu: 4, 
+          Jeju: 0,
+          Daejeon: 1,
+          Seoul: 2,
+          Busan : 3,
+          Daegu: 4,
           Pohang: 5
         };
         var random = "random";
         var cities = ["Jeju", "Daejeon", "Seoul", "Busan", "Daegu", "Pohang"];
         var citypoints = [{city: random, score: 0}, {city: random, score: 0}, {city: random, score: 0}, {city: random, score: 0}, {city: random, score: 0}, {city: random, score: 0}];
-        
+
         grref.once("value", function(snap) {
           var counter = 0;
           var total = snap.numChildren();
-          snap.forEach(function(child){  
+          snap.forEach(function(child){
             console.log(child.key);
             citypoints[citymap[child.key]] = {city: cities[citymap[child.key]], score: child.val().totalpoint};
             counter += 1;
@@ -143,29 +142,29 @@
 
         function showguys() {
             userobjects.sort(function(a, b) {return a["point"] - b["point"]});
-            
+
             console.log("")
             for (var i = 0; i < 3; i++) {
-              var html = '<tr>' + 
+              var html = '<tr>' +
                           '<td><h5>' + citypoints[i]["city"] + '</h5></td>' +
                           '<td><h5>' + citypoints[i]["city"] + '</h5></td>' +
                         '</tr>';
               $(html).insertAfter(".startrows");
-            } 
+            }
         }
 
 
         function showgroups() {
             citypoints.sort(function(a, b) {return a["score"] - b["score"]});
-            
+
             for (var i = 0; i < citypoints.length; i++) {
-              var html = '<tr>' + 
+              var html = '<tr>' +
                           '<td><h5>' + citypoints[i]["city"] + '</h5></td>' +
                           '<td><h5>' + citypoints[i]["score"] + '</5></td>' +
                         '</tr>';
               $(html).insertAfter(".startrows");
 
-            } 
+            }
         }
 
         </script>
