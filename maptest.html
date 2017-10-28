@@ -57,7 +57,7 @@
       function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 33.5003211, lng: 126.5300339},
-          zoom: 19,
+          zoom: 20,
           styles: [{
             featureType: 'poi',
             stylers: [{ visibility: 'off' }]  // Turn off POI.
@@ -84,6 +84,14 @@
                     infoWindow.setContent('Location found.');
                     map.setCenter(pos);
 
+                    var marker = new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        icon: {
+                            url: 'http://clipartist.net/social/clipartist.net/G/places_pin_icon-555px.png'
+                        }
+                    });
+
                     // get lat and lng from current location
                     data.lat = pos.lat;
                     data.lng = pos.lng;
@@ -105,6 +113,22 @@
         });
 
         initAuthentication(initFirebase.bind(undefined, heatmap));
+        // load locations informations
+        var loc = firebase.child('locations');
+
+        loc.once("value", function(snapshot) {
+            snapshot.forEach(function(child) {
+                var latLng = new google.maps.LatLng(child.val().lat,child.val().lng);
+                var marker = new google.maps.Marker({
+                    position: latLng,
+                    map: map,
+                    draggable: true,
+                    icon: {
+                        url: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/134893/pin-red.svg'
+                    }
+                });
+            });
+        });
       }
       function handleLocationError(browserHasGeolocation, infoWindow, pos) {
           infoWindow.setPosition(pos);
@@ -118,7 +142,6 @@
        * which points are added from Firebase.
        */
       function initFirebase(heatmap) {
-
         // 10 minutes before current time.
         var startTime = new Date().getTime() - (60 * 10 * 1000);
 
@@ -128,7 +151,7 @@
         // Listener for when a click is added.
         clicks.orderByChild('timestamp').startAt(startTime).on('child_added',
           function(snapshot) {
-
+            console.log(snapshot);
             // Get that click from firebase.
             var newPosition = snapshot.val();
             var point = new google.maps.LatLng(newPosition.lat, newPosition.lng);
