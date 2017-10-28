@@ -9,7 +9,7 @@
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
       <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
+      <link href="css/animate.min.css" type="text/css" rel="stylesheet">
 
     <style>
       /* Always set the map height explicitly to define the size of the div
@@ -303,7 +303,21 @@
         <i class="material-icons" onclick="addToFirebase();">menu</i>
       </a>
     </div>
+    <!--Call your modal-->
+    <a id="demo01" href="#animatedModal">DEMO01</a>
 
+    <!--DEMO01-->
+    <div id="animatedModal">
+        <!--THIS IS IMPORTANT! to close the modal, the class name has to match the name given on the ID  class="close-animatedModal" -->
+        <div class="close-animatedModal">
+            CLOSE MODAL
+        </div>
+
+        <div class="modal-content">
+                  <!--Your modal content goes here-->
+            my content
+        </div>
+    </div>
     <!-- Modal Structure -->
     <div id="modal1" class="modal bottom-sheet">
         <div class="modal-content">
@@ -318,9 +332,9 @@
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZudCkhX8Okld9JFRnd-_IV9Y4uznZbM8&libraries=visualization&callback=initMap">
     </script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="animatedModal.js-master/jquery.min.js"></script>
     <script src="js/materialize.js"></script>
     <script src="js/init.js"></script>
-
-
+    <script src="animatedModal.js-master/animatedModal.min.js"></script>
   </body>
 </html>
