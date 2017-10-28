@@ -21,10 +21,10 @@
                             <thead>
                                 <tr>
                                     <th>
-                                       ID 
+                                       <b>REGION</b>
                                     </th>
                                     <th>
-                                        POINTS
+                                        <b>POINTS</b>
                                     </th>
                                 </tr>
                             </thead>
@@ -55,35 +55,85 @@
         firebase.initializeApp(config);
         var database = firebase.database();
         var usersref = database.ref("users");
+
+        var grref = database.ref("groups");
         
+
         var userobjects = [];
+
+        var cities = ["Jeju", "Daejeon", "Seoul", "Busan", "Daegu", "Pohang"];
+        var citypoints = [];
+        
+        grref.once("value", function(snap) {
+          var counter = 0;
+          var total = snap.numChildren();
+          snap.forEach(function(child){  
+            citypoints.push({city: cities[counter], score: child.val().totalpoint});
+            counter += 1;
+            if (counter == total) {
+              showgroups();
+            }
+          });
+        });
+
+
+        // for (var i = 0; i < cities.length; i++) {
+        //   var refer = database.ref("groups/" + cities[i] +"/");
+        //   refer.once("value", function(snap) {
+        //   snap.forEach(function(child){
+        //     citypoints.push({city: cities[i], score: child.val()});
+        //     });
+        //   });
+        //   if (i == (cities.length - 1)) {
+        //     showgroups();
+        //     console.log("heeher");
+        //   }
+        //   console.log(citypoints.length);
+        // }
+        
+
+
 
         usersref.once("value", function(snapshot) {
             var counter = snapshot.numChildren();
             snapshot.forEach(function(child) {
                 var apple= child.val();
                 userobjects.push(apple);
+
+
                 counter -= 1;
                 if (counter == 0) {
-                    showguys();
+                    // showguys();
                 }
             });
         });
 
         function showguys() {
             userobjects.sort(function(a, b) {return a["point"] - b["point"]});
-            var toppoint = userobjects[0]["point"];
             
-            console.log("hshs ")
+            console.log("")
             for (var i = 0; i < 3; i++) {
               var html = '<tr>' + 
-                          '<td><h5>' + userobjects[i]["id"] + '</h5></td>' +
-                          '<td><h5>' + userobjects[i]["point"] + '</5></td>' +
+                          '<td><h5>' + citypoints[i]["city"] + '</h5></td>' +
+                          '<td><h5>' + citypoints[i]["city"] + '</h5></td>' +
                         '</tr>';
               $(html).insertAfter(".startrows");
             } 
         }
-       
+
+
+        function showgroups() {
+            citypoints.sort(function(a, b) {return a["score"] - b["score"]});
+            
+            for (var i = 0; i < citypoints.length; i++) {
+              var html = '<tr>' + 
+                          '<td><h5>' + citypoints[i]["city"] + '</h5></td>' +
+                          '<td><h5>' + citypoints[i]["score"] + '</5></td>' +
+                        '</tr>';
+              $(html).insertAfter(".startrows");
+
+            } 
+        }
 
         </script>
     </body>
