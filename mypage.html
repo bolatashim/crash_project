@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+      <title>page</title>
+      <!-- CSS  -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    <style>
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
+    <header>
+     <div class="navbar-fixed" style="z-index: 9999;">
+          <nav style="background-color: black">
+            <div class="nav-wrapper container center-align" style="margin:0; padding:0; width:100%;"><a id="logo-container" href="#" class="brand-logo" style="color: white;">My Page</a>
+
+              <ul id="slide-out" class="side-nav fixed">
+                <li><div class="userView" style="margin:0">
+                      <div class="background" style="background-color: gray">
+                        <!-- <img src=""> -->
+                      </div>
+                      <a href="#!user"><img class="circle" src="https://cdn3.iconfinder.com/data/icons/gray-toolbar-3/512/user-512.png"></a>
+                      <a href="#!name"><span class="white-text name">Name:</span></a>
+                      <a href="#!score"><span class="white-text email">Score:</span></a>
+                      </div>
+                </li>
+                <li><a class="waves-effect" href="index.html">Map</a></li>
+                <li><a class="waves-effect" href="#!">Mypage</a></li>
+                <li><a class="waves-effect" href="#!">Ladderboard</a></li>
+                <li><a class="waves-effect" href="#!">Updates</a></li>
+              </ul>
+              <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons" style="color: white">menu</i></a>
+
+            </div>
+          </nav>
+      </div>
+    </header>
+    <div id="profile-info">
+      <p><b>ID:</b> kvtoraman</p>
+      <img src="img/avatar.jpg" alt="AVATAR">
+      <p>You sent <b> 5 </b> photo(s)!</p>
+      <p>Helped to build <b>2</b> trash-bin(s)!</p>
+
+    </div>
+
+    <table class="responsive" id="update_table">
+      <thead>
+        <tr>
+            <th>Badge</th>
+            <th>Town</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Major</td>
+          <td>Jackson street</td>
+        </tr>
+        <tr>
+          <td>Sheriff</td>
+          <td>Gangnamyok exit 2</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!--<script src="animatedModal.js-master/jquery.min.js"></script>-->
+    <script src="js/materialize.js"></script>
+    <script src="js/init.js"></script>
+  </body>
+</html>
