@@ -4,5 +4,7 @@
     $('.button-collapse').sideNav();
     $('.parallax').parallax();
 
-  }); // end of document ready
+  });
+
+  $('.modal').modal(); // end of document ready
 })(jQuery); // end of jQuery name space
