@@ -1,0 +1,215 @@
+$background: #FFFFFF;
+$accent: #fcaf35;
+$margin: 40px;
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	background: $background;
+	display: flex;
+	align-items: center;
+  	justify-content: center;
+	
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	padding: 0;
+	font-weight: 300;
+}
+
+h1, h2 {
+	font-size: 1.5em;
+}
+
+h2 {
+	&.sub.header {
+		font-size: 2em;
+		color: #ed2d1c;
+	}
+}
+.row {
+	margin-bottom: $margin;
+}
+
+.card {
+	display: flex;
+	background: #fff;
+	min-width: 50%;
+	border-radius: 5px;
+	overflow: hidden;
+	box-shadow: 0 2px 4px 0 rgba(34,36,38,.12), 0 2px 10px 0 rgba(34,36,38,.15), 0 55px 50px -20px rgba(34,36,38,.25);
+
+	&-section {
+		flex-grow: 1;
+		padding: $margin;
+	}
+	&-info {
+		position: relative;
+		background: linear-gradient(to bottom, #626d82 0%,#343d4d 100%);
+		color: rgba(255, 255, 255, 0.8);
+		text-align: center;
+		
+		h2 {
+			&.sub.header {
+				color: rgb(237, 45, 28);
+			}
+		}
+		
+		.menu, .search {
+			position: absolute;
+			font-size: 3em;
+			left: $margin;
+		}
+		
+		.menu {
+			top: $margin;
+		}
+		
+		.search {
+			bottom: $margin;
+		}
+	}
+	
+	&-details {
+		position: relative;
+		color: rgba(0, 0, 0, 0.6);
+		width: 50%;
+	}
+}
+
+.avatar {
+	display:inline-block;
+	background-image: url('http://radfaces.com/images/avatars/alex-murphy.jpg');
+	background-size: cover;
+	border-radius: 50%;
+	height: 75px;
+	width: 75px;
+	border: 3px solid $accent;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.12), 0 2px 10px 0 rgba(0,0,0,.15);
+}
+
+.dial {
+	color: $accent;
+	text-shadow: inset 1px 1px 0 rgba(255, 255, 255, 1);
+	background: #fff;
+	border-radius: 50%;
+	display: inline-block;
+	height: 150px;
+	margin: 50px 0;
+	padding: 40px;
+	box-shadow: 0 4px 15px -10px  rgba(0, 0, 0, .1), 0 5px 15px 1px rgba(0, 0, 0, .18), 0 0 0 15px #fff, 0 0 0 22px $accent, 0 55px 50px -20px rgba(34,36,38,.25);
+	
+	&-title {
+		font-size: 3.8em;
+		font-weight: 400;
+		line-height: .8;
+		
+	}
+	&-value {
+		font-size: 1.8em;
+	}
+}
+
+.menu {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: $margin;
+	&-item {
+		font-size: 1.6em;
+		font-weight: 400;
+		padding: 20px 40px;
+		color: rgba(0, 0, 0, 0.3);
+		min-width: 50%;
+		
+		&:not(:last-child) {
+			box-shadow: 25px 0px 0 -24px rgba(0, 0, 0, 0.2);
+		}
+		
+		&:last-child {
+			text-align: right;
+		}
+		
+		&-active {
+			color: tint( $accent, 20% );
+		}
+	}
+}
+
+.statistics {
+	display: flex;
+	justify-content: center;
+	
+	.statistic {
+		padding: 0px 20px;
+		min-width: 120px;
+		&:not(:last-child) {
+			box-shadow: 20px 0px 0px -19px rgba(255, 255, 255, 0.2)
+		}
+		
+		&-title {
+			font-size: 1.5em;
+		}
+		&-value {
+			color: $accent;
+			font-size: 2em;
+		}
+	}
+}
+
+
+.progress {
+  display: flex;
+  background: rgba(0, 0, 0, 0.1);
+  min-height: 12px;
+  overflow: hidden;
+  
+  &-bar {
+    background: tint( $accent, 20% );
+    min-height: 10px;
+	}
+}
+
+.leaderboard {
+	height: 100%;
+	counter-reset: leaderboard-counter;
+	
+	dt {
+		position: relative;
+		padding-left: 40px;
+		margin-bottom: 10px;
+		
+		&:before {
+			content: counter(leaderboard-counter);
+			counter-increment: leaderboard-counter;
+			position: absolute;
+			left: 0;
+			top: 0;
+			font-size: 1.3em;
+			line-height: .8;
+			font-weight: 400;
+			color: rgba(0, 0, 0, 0.8);
+		}
+	}
+	
+	dd {
+		display: flex;
+		margin-bottom: 40px;
+		justify-content: space-between;
+	}
+	
+	&-value {
+		font-weight: 700;
+	}
+}
