@@ -15,17 +15,13 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 60%;
+        height: 100%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
         height: 100%;
         margin: 0;
         padding: 0;
-      }
-
-      .fixed-action-btn{
-        bottom:250px;/*desired value*/
       }
     </style>
   </head>
@@ -46,10 +42,8 @@
                       <a href="#!score"><span class="white-text email">Score:</span></a>
                       </div>
                 </li>
-                <li><a class="waves-effect" href="#!">Map</a></li>
-                <li><a class="waves-effect" href="mypage.html">Mypage</a></li>
-                <li><a class="waves-effect" href="leader.html">Leaderboard</a></li>
-                <li><a class="waves-effect" href="#!">Updates</a></li>
+                <li><a class="waves-effect" href="#!">Mypage</a></li>
+                <li><a class="waves-effect" href="#!">View Ladder</a></li>
               </ul>
               <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons" style="color: white">menu</i></a>
 
@@ -76,15 +70,7 @@
   firebase.initializeApp(config);
 
   var database = firebase.database();
-
-  var userEmail = null;
-
-  firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        userEmail = user.email;
-      } else {
-      }
-	});
+  
       /**
       * Data object to be written to Firebase.
       */
@@ -101,38 +87,6 @@
       var selectedTrashId = null;
       var selectedMarker=null;
 
-      function changepoints(idval, points) {
-          var usersref = database.ref("users");
-          usersref.once("value", function(snap) {
-              snap.forEach(function(child) {
-                  var userdata = child.val();
-
-                  if (userdata["id"] == idval) {
-                      var newpoint = userdata["point"] + points;
-                      var city = userdata["group"];
-                      database.ref("groups/").once("value", function(snap) {
-                        snap.forEach(function(child) {
-                          if (child.key == city) {
-                            var oldpoint = child.val().totalpoint;
-                            database.ref("groups/" + city + "/").update({totalpoint: oldpoint + points});
-                          }
-                        });
-                      });                     
-                      database.ref('users/' + child.key).set({
-                        ...userdata,
-                        point: newpoint
-                      });
-                  }
-              });
-          });
-
-
-
-      }
-
-      function addPointOnUserPoint(point){
-        changepoints(userEmail, 100);
-      }
       /**
       * Starting point for running the program. Authenticates the user.
       * @param {function()} onAuthSuccess - Called when authentication succeeds.
@@ -305,6 +259,31 @@
           $('#modal1').modal('open');
       }
 
+      /**
+       * Updates the last_message/ path with the current timestamp.
+       * @param {function(Date)} addClick After the last message timestamp has been updated,
+       *     this function is called with the current timestamp to add the
+       *     click to the firebase.
+       */
+      function getTimestamp(addClick) {
+        // Reference to location for saving the last click time.
+        var ref = firebase.child('last_message/' + data.sender);
+
+        ref.onDisconnect().remove();  // Delete reference from firebase on disconnect.
+
+        // Set value to timestamp.
+        ref.set(Firebase.ServerValue.TIMESTAMP, function(err) {
+          if (err) {  // Write to last message was unsuccessful.
+            console.log(err);
+          } else {  // Write to last message was successful.
+            ref.once('value', function(snap) {
+              addClick(snap.val());  // Add click with same timestamp.
+            }, function(err) {
+              console.warn(err);
+            });
+          }
+        });
+      }
 
       /**
        * Adds a click to firebase.
@@ -317,15 +296,17 @@
               lat : data.lat,
               lng : data.lng,
           };
+        getTimestamp(function(timestamp) {
           // Add the new timestamp to the record data.
-          data.timestamp = new Date().getTime();
+          data.timestamp = timestamp;
 
-          var ref = database.ref('pos').push(data, function(err) {
+          var ref = firebase.child('pos').push(data, function(err) {
             if (err) {  // Data was not written to firebase.
               console.warn(err);
             }
           });
-          addTrashMarker(latLng, "unknown", ref.key, map);
+          addTrashMarker(latLng, "unknown", ref.key(), map);
+        });
       }
       function changeTypeTrash(){
           var type = "unknown";
@@ -340,7 +321,7 @@
           selectedMarker.setIcon(iconUrl);
 
 
-          var child = database.ref('pos');
+          var child = firebase.child('pos');
 
           // Get a key for a new Post.
             var newPostKey = child.push().key;
@@ -350,16 +331,14 @@
             updates['/'+ selectedTrashId + '/type/']  = type;
 
 
-            child.update(updates);
+            child.ref().update(updates);
             $('#modal1').modal('close');
-
-            addPointOnUserPoint(100);
       }
     </script>
 
     <div class="fixed-action-btn click-to-toggle">
       <a class="btn-floating btn-large red">
-        <i class="material-icons" onclick="addToFirebase();">add</i>
+        <i class="material-icons" onclick="addToFirebase();">menu</i>
       </a>
     </div>
 
@@ -392,31 +371,15 @@
         </div>
     </div>
 
-    <footer id="update-bar" class="page-footer">
-          <div class="container">
-            <div class="row">
-              <div class="col l6 s12">
-                <h5 class="white-text">Updated Log</h5>
-              </div>
-              <div class="col l4 offset-l2 s12">
-                <ul>
-                    <li><p class="grey-text text-lighten-3" href="#!">You got 1000 points!!</p></li>
-                  <li><p class="grey-text text-lighten-3" href="#!">Kamil updated trash can status to 'empty'</p></li>
-                  <li><p class="grey-text text-lighten-3" href="#!">A trash can has been installed at the Jeju cityhall</p></li>
-                  <li><p class="grey-text text-lighten-3" href="#!">A trash can has been installed at the Jeju cityhall</p></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </footer>
-
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZudCkhX8Okld9JFRnd-_IV9Y4uznZbM8&libraries=visualization&callback=initMap">
     </script>
 
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="js/materialize.js"></script>
     <script src="js/init.js"></script>
+    <script src="js/readfire.js"></script>
 
 
   </body>

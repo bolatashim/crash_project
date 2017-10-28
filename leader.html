@@ -101,15 +101,24 @@
         
 
         var userobjects = [];
-
+        var citymap = {
+          Jeju: 0, 
+          Daejeon: 1, 
+          Seoul: 2, 
+          Busan : 3, 
+          Daegu: 4, 
+          Pohang: 5
+        };
+        var random = "random";
         var cities = ["Jeju", "Daejeon", "Seoul", "Busan", "Daegu", "Pohang"];
-        var citypoints = [];
+        var citypoints = [{city: random, score: 0}, {city: random, score: 0}, {city: random, score: 0}, {city: random, score: 0}, {city: random, score: 0}, {city: random, score: 0}];
         
         grref.once("value", function(snap) {
           var counter = 0;
           var total = snap.numChildren();
           snap.forEach(function(child){  
-            citypoints.push({city: cities[counter], score: child.val().totalpoint});
+            console.log(child.key);
+            citypoints[citymap[child.key]] = {city: cities[citymap[child.key]], score: child.val().totalpoint};
             counter += 1;
             if (counter == total) {
               showgroups();
