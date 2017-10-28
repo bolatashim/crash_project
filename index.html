@@ -15,13 +15,17 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 100%;
+        height: 60%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
         height: 100%;
         margin: 0;
         padding: 0;
+      }
+
+      .fixed-action-btn{
+        bottom:250px;/*desired value*/
       }
     </style>
   </head>
@@ -377,11 +381,28 @@
         </div>
     </div>
 
+    <footer id="update-bar" class="page-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Updated Log</h5>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <ul>
+                    <li><p class="grey-text text-lighten-3" href="#!">You got 1000 points!!</p></li>
+                  <li><p class="grey-text text-lighten-3" href="#!">Kamil updated trash can status to 'empty'</p></li>
+                  <li><p class="grey-text text-lighten-3" href="#!">A trash can has been installed at the Jeju cityhall</p></li>
+                  <li><p class="grey-text text-lighten-3" href="#!">A trash can has been installed at the Jeju cityhall</p></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
+
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZudCkhX8Okld9JFRnd-_IV9Y4uznZbM8&libraries=visualization&callback=initMap">
     </script>
 
-    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="js/materialize.js"></script>
     <script src="js/init.js"></script>
