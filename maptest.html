@@ -81,9 +81,6 @@
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
                     };
-
-                    infoWindow.setPosition(pos);
-                    infoWindow.setContent('Location found.');
                     map.setCenter(pos);
 
                     var marker = new google.maps.Marker({
@@ -95,12 +92,15 @@
                         }
                     });
 
+                    google.maps.event.addListener(marker, 'drag', function(event){
+                        console.log(event.latLng.lat());
+                        console.log(event.latLng.lng());
+                    });
                     // get lat and lng from current location
                     data.lat = pos.lat;
                     data.lng = pos.lng;
                     addToFirebase(data);
                 }, function() {
-                    handleLocationError(true, infoWindow, map.getCenter());
                 });
         }
         else {
