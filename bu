@@ -1,0 +1,61 @@
+
+		<nav class="menu">
+			<article class="menu-item menu-item-active">
+				City
+			</article>
+			<article class="menu-item">
+				School
+			</article>
+		</nav>
+		
+		<dl class="leaderboard">
+			<dt>
+				<article class="progress">
+				  <section class="progress-bar" style="width: 85%;"></section>
+				</article>
+			</dt>
+			<dd>
+				<div class="leaderboard-name">Jeju</div>
+				<div class="leaderboard-value">3000</div>
+			</dd>
+			<dt>
+				<article class="progress">
+				  <section class="progress-bar" style="width: 65%;"></section>
+				</article>
+			</dt>
+			<dd>
+				<div class="leaderboard-name">Seoul</div>
+				<div class="leaderboard-value">2000</div>
+			</dd>
+			<dt>
+				<article class="progress">
+				  <section class="progress-bar" style="width: 60%;"></section>
+				</article>
+			</dt>
+			<dd>
+				<div class="leaderboard-name">Kyung-gi</div>
+				<div class="leaderboard-value">1000</div>
+			</dd>
+			<dt>
+				<article class="progress">
+				  <section class="progress-bar" style="width: 55%;"></section>
+				</article>
+			</dt>
+			<dd>
+				<div class="leaderboard-name">Kang-won</div>
+				<div class="leaderboard-value">500</div>
+			</dd>
+			<dt>
+				<article class="progress">
+				  <section class="progress-bar" style="width: 35%;"></section>
+				</article>
+			</dt>
+			<dd>
+				<div class="leaderboard-name">Kyung-sang</div>
+				<div class="leaderboard-value">300</div>
+			</dd>
+		</dl>
+	</section>
+
+
+	<section class="card-details card-section">
