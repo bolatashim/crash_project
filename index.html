@@ -31,7 +31,7 @@
      <div class="navbar-fixed" style="z-index: 9999;">
           <nav style="background-color: black">
             <div class="nav-wrapper container center-align" style="margin:0; padding:0; width:100%;"><a id="logo-container" href="#" class="brand-logo" style="color: white;">C-Rash</a>
-             
+
               <ul id="slide-out" class="side-nav fixed">
                 <li><div class="userView" style="margin:0">
                       <div class="background" style="background-color: gray">
@@ -46,7 +46,7 @@
                 <li><a class="waves-effect" href="#!">View Ladder</a></li>
               </ul>
               <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons" style="color: white">menu</i></a>
-              
+
             </div>
           </nav>
       </div>
@@ -86,13 +86,13 @@
           var url;
 
           if(type === 'full'){
-              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored.png?alt=media&token=ef0f6eac-5edb-48f4-9317-6e7213529ea4';
+              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored_resized.png?alt=media&token=013a1556-eb12-496c-b9cf-57dcb1a50667';
           }
           else if(type === 'empty'){
-              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty.png?alt=media&token=c0a29f10-714f-414a-b9ac-5ac9809d9cdf';
+              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty_colored_resized.png?alt=media&token=37e6e034-7a48-4bba-956f-631c34edd73f';
           }
           else{
-              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown.png?alt=media&token=ed92779a-0feb-4213-9857-3a6af0343794';
+              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown_resized.png?alt=media&token=145c33a7-60b2-42ff-ba72-0ab5dac21b2f';
           }
           return url;
       }
@@ -151,7 +151,7 @@
                     });
                     data.lat = pos.lat;
                     data.lng = pos.lng;
-                    
+
                     google.maps.event.addListener(marker, 'drag', function(event){
                         data.lat = event.latLng.lat();
                         data.lng = event.latLng.lng();
