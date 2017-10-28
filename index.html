@@ -12,20 +12,38 @@
 		<!--[if lt IE 9]>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
   		<![endif]-->
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<!--<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  	<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  		<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
 	</head>
 
 	<body>
 		  
 
-			<!-- connect to firebase -->
-			<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
-			<script src="script/jquery-3.2.1.min.js"></script>
-			<script src="bootstrap/js/bootstrap.min.js"></script>
-			<script type="text/javascript" src="js/sample.js"></script> <!-- use fb in sample.js -->
-			<script type="text/javascript" src="js/kamil.js"></script>
-		  
+		<!-- connect to firebase -->
+		<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+		<script src="script/jquery-3.2.1.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="js/materialize.js"></script>
+	 	<script src="js/init.js"></script>
 
+		<script type="text/javascript" src="js/sample.js"></script> <!-- use fb in sample.js -->
+		<script type="text/javascript" src="js/kamil.js"></script>
+		  	
+		<!-- Dropdown Trigger -->
+		<a class='dropdown-button btn' href='#' data-activates='dropdown1'>Drop Me!</a>
+
+		<!-- Dropdown Structure -->
+		<ul id='dropdown1' class='dropdown-content'>
+			<li><a href="#!">one</a></li>
+			<li><a href="#!">two</a></li>
+			<li class="divider"></li>
+			<li><a href="#!">three</a></li>
+			<li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
+			<li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+		</ul>
 
 	</body>
 </html>
