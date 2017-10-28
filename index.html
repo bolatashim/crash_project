@@ -28,21 +28,6 @@
   <body>
     <div id="map"></div>
 
-    <!-- Modal Trigger -->
-    <a class="waves-effect waves-light btn modal-trigger" href="#modal1">I assume that this is marker</a>
-
-    <!-- Modal Structure -->
-    <div id="modal1" class="modal bottom-sheet">
-        <div class="modal-content">
-            <h4>update trash can information</h4>
-            <p>this can is full</p>
-            <p>this can is empty</p>
-            <p>not full but need clean</p>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
-        </div>
-    </div>
     <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
     <script>
       /**
@@ -61,6 +46,8 @@
         lng: null,
         type: null,
       };
+
+      var map=null;
 
       /**
       * Starting point for running the program. Authenticates the user.
@@ -82,7 +69,7 @@
        */
 
       function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 33.5003211, lng: 126.5300339},
           zoom: 20,
           styles: [{
@@ -95,6 +82,10 @@
           }],
           disableDoubleClickZoom: true,
           streetViewControl: false,
+          zoomControl: true,
+          zoomControlOptions: {
+              position: google.maps.ControlPosition.LEFT_BOTTOM
+          },
         });
 
         // Try HTML5 geolocation.
@@ -116,13 +107,11 @@
                     });
 
                     google.maps.event.addListener(marker, 'drag', function(event){
-                        console.log(event.latLng.lat());
-                        console.log(event.latLng.lng());
+                        data.lat = event.latLng.lat();
+                        data.lng = event.latLng.lng();
                     });
-                    // get lat and lng from current location
-                    data.lat = pos.lat;
-                    data.lng = pos.lng;
-                    addToFirebase(data);
+
+                    //addToFirebase(data);
                 }, function() {
                 });
         }
@@ -145,31 +134,36 @@
                 var receivedData = child.val();
                 var latLng = new google.maps.LatLng(receivedData.lat,receivedData.lng);
 
-                var iconUrl;
-
-                if(receivedData.type === 'full'){
-                    iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored.png?alt=media&token=ef0f6eac-5edb-48f4-9317-6e7213529ea4';
-                }
-                else if(receivedData.type === 'empty'){
-                    iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty.png?alt=media&token=c0a29f10-714f-414a-b9ac-5ac9809d9cdf';
-                }
-                else{
-                    iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown.png?alt=media&token=ed92779a-0feb-4213-9857-3a6af0343794';
-                }
-
-                var marker = new google.maps.Marker({
-                    position: latLng,
-                    map: map,
-                    icon: {
-                        url: iconUrl
-                    }
-                });
-                marker.addListener('click', function() {
-                    popUpButtons();
-                });
+                addTrashMarker(latLng, receivedData.type, map);
             });
         });
       }
+
+      function addTrashMarker(pos, type, map){
+          var iconUrl;
+
+          if(type === 'full'){
+              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored.png?alt=media&token=ef0f6eac-5edb-48f4-9317-6e7213529ea4';
+          }
+          else if(type === 'empty'){
+              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty.png?alt=media&token=c0a29f10-714f-414a-b9ac-5ac9809d9cdf';
+          }
+          else{
+              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown.png?alt=media&token=ed92779a-0feb-4213-9857-3a6af0343794';
+          }
+
+          var marker = new google.maps.Marker({
+              position: pos,
+              map: map,
+              icon: {
+                  url: iconUrl
+              }
+          });
+          marker.addListener('click', function() {
+              popUpButtons();
+          });
+      }
+
       /**
        * Set up a Firebase with deletion on clicks older than expirySeconds
        * @param {!google.maps.visualization.HeatmapLayer} heatmap The heatmap to
@@ -251,7 +245,13 @@
        * @param {Object} data The data to be added to firebase.
        *     It contains the lat, lng, sender and timestamp.
        */
-      function addToFirebase(data) {
+      function addToFirebase() {
+          console.log("added");
+          var latLng = {
+              lat : data.lat,
+              lng : data.lng,
+          };
+          addTrashMarker(latLng, "unknown", map);
         getTimestamp(function(timestamp) {
           // Add the new timestamp to the record data.
           data.timestamp = timestamp;
@@ -261,8 +261,31 @@
             }
           });
         });
+
+        function changeTypeTrash(){
+
+        }
       }
     </script>
+
+    <div class="fixed-action-btn click-to-toggle">
+      <a class="btn-floating btn-large red">
+        <i class="material-icons" onclick="addToFirebase();">menu</i>
+      </a>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h4>update trash can information</h4>
+            <a class="waves-effect waves-light btn">this can is full</a>
+            <a class="waves-effect waves-light btn">this can is empty</a>
+            <a class="waves-effect waves-light btn">not full but need clean</a>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+        </div>
+    </div>
 
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZudCkhX8Okld9JFRnd-_IV9Y4uznZbM8&libraries=visualization&callback=initMap">
