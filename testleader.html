@@ -1,24 +1,59 @@
 <!DOCTYPE html>
 <html >
     <head>
-        <meta charset="UTF-8">
-        <title>Leaderboard</title>
-        <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
-        <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-
-        
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+      <title>page</title>
+      <!-- CSS  -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
+    <style>
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
     </head>
+<header>
+     <div class="navbar-fixed" style="z-index: 9999;">
+          <nav style="background-color: black">
+            <div class="nav-wrapper container center-align" style="margin:0; padding:0; width:100%;"><a id="logo-container" href="#" class="brand-logo" style="color: white;">Leaderboard</a>
 
+              <ul id="slide-out" class="side-nav fixed">
+                <li><div class="userView" style="margin:0">
+                      <div class="background" style="background-color: gray">
+                        <!-- <img src=""> -->
+                      </div>
+                      <a href="#!user"><img class="circle" src="https://cdn3.iconfinder.com/data/icons/gray-toolbar-3/512/user-512.png"></a>
+                      <a href="#!name"><span class="white-text name">Name:</span></a>
+                      <a href="#!score"><span class="white-text email">Score:</span></a>
+                      </div>
+                </li>
+                <li><a class="waves-effect" href="index.html">Map</a></li>
+                <li><a class="waves-effect" href="mypage.html">Mypage</a></li>
+                <li><a class="waves-effect" href="#">Leaderboard</a></li>
+                <li><a class="waves-effect" href="#!">Updates</a></li>
+              </ul>
+              <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons" style="color: white">menu</i></a>
+
+            </div>
+          </nav>
+      </div>  
+</header>
     <body>
          
 
         <div class="container">
-            <h2>Leaderboard</h2>
                         <table class="bordered striped">
                             <thead>
+                              <tr>
+                                <th></th>
+                                <th></th>
+                              </tr>
                                 <tr>
                                     <th>
                                        <b>REGION</b>
@@ -42,9 +77,15 @@
         <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script src="js/materialize.js"></script>
 
-
         
         <script>
+
+        $(function(){
+
+          $('.button-collapse').sideNav();
+          $('.parallax').parallax();
+
+        });
         var config = {
           apiKey: "AIzaSyDtNA7S1roeuXiyO6nKReBxuvc7va5OEUY",
           authDomain: "crashproject-6d234.firebaseapp.com",
@@ -77,23 +118,6 @@
         });
 
 
-        // for (var i = 0; i < cities.length; i++) {
-        //   var refer = database.ref("groups/" + cities[i] +"/");
-        //   refer.once("value", function(snap) {
-        //   snap.forEach(function(child){
-        //     citypoints.push({city: cities[i], score: child.val()});
-        //     });
-        //   });
-        //   if (i == (cities.length - 1)) {
-        //     showgroups();
-        //     console.log("heeher");
-        //   }
-        //   console.log(citypoints.length);
-        // }
-        
-
-
-
         usersref.once("value", function(snapshot) {
             var counter = snapshot.numChildren();
             snapshot.forEach(function(child) {
@@ -103,7 +127,7 @@
 
                 counter -= 1;
                 if (counter == 0) {
-                    // showguys();
+                    // showguys(); for showing individual results
                 }
             });
         });

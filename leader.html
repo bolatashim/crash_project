@@ -1,155 +1,164 @@
 <!DOCTYPE html>
 <html >
     <head>
-        <meta charset="UTF-8">
-        <title>Leaderboard</title>
-        <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
-        <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+      <title>page</title>
+      <!-- CSS  -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-
-
-        <link rel="stylesheet" href="css/leader.css">
-
-
+    <style>
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
     </head>
+<header>
+     <div class="navbar-fixed" style="z-index: 9999;">
+          <nav style="background-color: black">
+            <div class="nav-wrapper container center-align" style="margin:0; padding:0; width:100%;"><a id="logo-container" href="#" class="brand-logo" style="color: white;">Leaderboard</a>
 
+              <ul id="slide-out" class="side-nav fixed">
+                <li><div class="userView" style="margin:0">
+                      <div class="background" style="background-color: gray">
+                        <!-- <img src=""> -->
+                      </div>
+                      <a href="#!user"><img class="circle" src="https://cdn3.iconfinder.com/data/icons/gray-toolbar-3/512/user-512.png"></a>
+                      <a href="#!name"><span class="white-text name">Name:</span></a>
+                      <a href="#!score"><span class="white-text email">Score:</span></a>
+                      </div>
+                </li>
+                <li><a class="waves-effect" href="index.html">Map</a></li>
+                <li><a class="waves-effect" href="mypage.html">Mypage</a></li>
+                <li><a class="waves-effect" href="#">Leaderboard</a></li>
+                <li><a class="waves-effect" href="#!">Updates</a></li>
+              </ul>
+              <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons" style="color: white">menu</i></a>
+
+            </div>
+          </nav>
+      </div>  
+</header>
     <body>
-         <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+         
 
-
-
-        <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
-            <script>
-/**
-* Reference to Firebase database.
- * @const
-
- */
-            var firebase = new Firebase('https://crashproject-6d234.firebaseio.com/');
-
-            /**
-             * Data object to be written to Firebase.
-             */
-            var data = {
-                id: null,
-                point: null,
-                group: null,
-                loc: null,
-            };
-        function initAuthentication(onAuthSuccess) {
-            firebase.authAnonymously(function(error, authData) {
-                if (error) {
-                    console.log('Login Failed!', error);
-                } else {
-                    data.sender = authData.uid;
-                    onAuthSuccess();
-                }
-            }, {remember: 'sessionOnly'});  // Users will get a new id for every session.
-        }
-        var loc = firebase.child('users');
-        var bucket ={}
-        loc.once("value", function(snapshot) {
-            var content = '';
-            snapshot.forEach(function(child) {
-                var apple= child.val();
-                console.log(apple);
-            });
-            $('#ex-table').append(content);
-        });
-
-            </script>
-        <div class="card">
-
-            <section class="card-info card-section">
-                <i class="ion-navicon menu"></i>
-
-                <div class="avatar row">
-                </div>
-                <section class="user row">
-                    <h1 class="user-header">
-                        Dae-jeon
-                        <h2 class="sub header">
-                            7 Left to Next Rank
-                        </h2>
-                    </h1>
-                </section>
-
-                <section class="statistics">
-                    <article class="statistic">
-                        <h4 class="statistic-title">
-                            Rank
-                        </h4>
-                        <h3 class="statistic-value">
-                            5th
-                        </h3>
-                    </article>
-
-                    <article class="statistic">
-                        <h4 class="statistic-title">
-                            Score
-                        </h4>
-                        <h3 class="statistic-value">
-                            493
-                        </h3>
-                    </article>
-                </section>
-                <dl class="leaderboard">
-                    <div class="startrows">
-                        <dt>
-                    <article class="progress">
-                        <section class="progress-bar" style="width: 100%;"></section>
-                    </article>
-                    </dt>
-                    <dd>
-                    <div class="leaderboard-name">Jeju</div>
-                    <div class="leaderboard-value">3000</div>
-                    </dd>
-                    </div>
-                    
-                    
-
-                    <dt>
-                    <article class="progress">
-                        <section class="progress-bar" style="width: 60%;"></section>
-                    </article>
-                    </dt>
-                    <dd>
-                    <div class="leaderboard-name">Seoul</div>
-                    <div class="leaderboard-value">2000</div>
-                    </dd>
-                    <dt>
-                    <article class="progress">
-                        <section class="progress-bar" style="width: 33%;"></section>
-                    </article>
-                    </dt>
-                    <dd>
-                    <div class="leaderboard-name">Kyung-gi</div>
-                    <div class="leaderboard-value">1000</div>
-                    </dd>
-                    <dt>
-                    <article class="progress">
-                        <section class="progress-bar" style="width: 15%;"></section>
-                    </article>
-                    </dt>
-                    <dd>
-                    <div class="leaderboard-name">Kang-won</div>
-                    <div class="leaderboard-value">500</div>
-                    </dd>
-                    <dt>
-                    <article class="progress">
-                        <section class="progress-bar" style="width: 14%;"></section>
-                    </article>
-                    </dt>
-                    <dd>
-                    <div class="leaderboard-name">Daejun</div>
-                    <div class="leaderboard-value">493</div>
-                    </dd>
-                </dl>
-            </section>
+        <div class="container">
+                        <table class="bordered striped">
+                            <thead>
+                              <tr>
+                                <th></th>
+                                <th></th>
+                              </tr>
+                                <tr>
+                                    <th>
+                                       <b>REGION</b>
+                                    </th>
+                                    <th>
+                                        <b>POINTS</b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="startrows">
+                                </tr>
+                            </tbody>
+                        </table>
         </div>
 
 
+
+
+        <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="js/materialize.js"></script>
+
+        
+        <script>
+
+        $(function(){
+
+          $('.button-collapse').sideNav();
+          $('.parallax').parallax();
+
+        });
+        var config = {
+          apiKey: "AIzaSyDtNA7S1roeuXiyO6nKReBxuvc7va5OEUY",
+          authDomain: "crashproject-6d234.firebaseapp.com",
+          databaseURL: "https://crashproject-6d234.firebaseio.com/",
+          storageBucket: "crashproject-6d234.appspot.com"
+        };
+        
+        firebase.initializeApp(config);
+        var database = firebase.database();
+        var usersref = database.ref("users");
+
+        var grref = database.ref("groups");
+        
+
+        var userobjects = [];
+
+        var cities = ["Jeju", "Daejeon", "Seoul", "Busan", "Daegu", "Pohang"];
+        var citypoints = [];
+        
+        grref.once("value", function(snap) {
+          var counter = 0;
+          var total = snap.numChildren();
+          snap.forEach(function(child){  
+            citypoints.push({city: cities[counter], score: child.val().totalpoint});
+            counter += 1;
+            if (counter == total) {
+              showgroups();
+            }
+          });
+        });
+
+
+        usersref.once("value", function(snapshot) {
+            var counter = snapshot.numChildren();
+            snapshot.forEach(function(child) {
+                var apple= child.val();
+                userobjects.push(apple);
+
+
+                counter -= 1;
+                if (counter == 0) {
+                    // showguys(); for showing individual results
+                }
+            });
+        });
+
+        function showguys() {
+            userobjects.sort(function(a, b) {return a["point"] - b["point"]});
+            
+            console.log("")
+            for (var i = 0; i < 3; i++) {
+              var html = '<tr>' + 
+                          '<td><h5>' + citypoints[i]["city"] + '</h5></td>' +
+                          '<td><h5>' + citypoints[i]["city"] + '</h5></td>' +
+                        '</tr>';
+              $(html).insertAfter(".startrows");
+            } 
+        }
+
+
+        function showgroups() {
+            citypoints.sort(function(a, b) {return a["score"] - b["score"]});
+            
+            for (var i = 0; i < citypoints.length; i++) {
+              var html = '<tr>' + 
+                          '<td><h5>' + citypoints[i]["city"] + '</h5></td>' +
+                          '<td><h5>' + citypoints[i]["score"] + '</5></td>' +
+                        '</tr>';
+              $(html).insertAfter(".startrows");
+
+            } 
+        }
+
+        </script>
     </body>
 </html>
