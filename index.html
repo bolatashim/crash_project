@@ -72,7 +72,15 @@
   firebase.initializeApp(config);
 
   var database = firebase.database();
-  
+
+  var userEmail = null;
+
+  firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        userEmail = user.email;
+      } else {
+      }
+	});
       /**
       * Data object to be written to Firebase.
       */
@@ -89,6 +97,27 @@
       var selectedTrashId = null;
       var selectedMarker=null;
 
+      function changepoints(idval, points) {
+          var usersref = database.ref("users");
+          usersref.once("value", function(snap) {
+              snap.forEach(function(child) {
+                  var userdata = child.val();
+
+                  if (userdata["id"] == idval) {
+                      var newpoint = userdata["point"] + points;
+
+                      database.ref('users/' + child.key).set({
+                        ...userdata,
+                        point: newpoint
+                      });
+                  }
+              });
+          });
+      }
+
+      function addPointOnUserPoint(point){
+        changepoints(userEmail, 100);
+      }
       /**
       * Starting point for running the program. Authenticates the user.
       * @param {function()} onAuthSuccess - Called when authentication succeeds.
@@ -308,6 +337,8 @@
 
             child.update(updates);
             $('#modal1').modal('close');
+
+            addPointOnUserPoint(100);
       }
     </script>
 
