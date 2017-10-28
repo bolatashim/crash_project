@@ -45,6 +45,7 @@
         lat: null,
         lng: null,
         type: "unknown",
+        message: "",
       };
 
       var map=null;
@@ -55,6 +56,21 @@
       * Starting point for running the program. Authenticates the user.
       * @param {function()} onAuthSuccess - Called when authentication succeeds.
       */
+      function getUrlByType(type){
+          var url;
+
+          if(type === 'full'){
+              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored.png?alt=media&token=ef0f6eac-5edb-48f4-9317-6e7213529ea4';
+          }
+          else if(type === 'empty'){
+              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty.png?alt=media&token=c0a29f10-714f-414a-b9ac-5ac9809d9cdf';
+          }
+          else{
+              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown.png?alt=media&token=ed92779a-0feb-4213-9857-3a6af0343794';
+          }
+          return url;
+      }
+
       function initAuthentication(onAuthSuccess) {
         firebase.authAnonymously(function(error, authData) {
           if (error) {
@@ -107,7 +123,9 @@
                             url: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/134893/pin-red.svg'
                         }
                     });
-
+                    data.lat = pos.lat;
+                    data.lng = pos.lng;
+                    
                     google.maps.event.addListener(marker, 'drag', function(event){
                         data.lat = event.latLng.lat();
                         data.lng = event.latLng.lng();
@@ -142,17 +160,7 @@
       }
 
       function addTrashMarker(pos, type, key, map){
-          var iconUrl;
-
-          if(type === 'full'){
-              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored.png?alt=media&token=ef0f6eac-5edb-48f4-9317-6e7213529ea4';
-          }
-          else if(type === 'empty'){
-              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty.png?alt=media&token=c0a29f10-714f-414a-b9ac-5ac9809d9cdf';
-          }
-          else{
-              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown.png?alt=media&token=ed92779a-0feb-4213-9857-3a6af0343794';
-          }
+          var iconUrl = getUrlByType(type);
 
           var marker = new google.maps.Marker({
               position: pos,
@@ -268,18 +276,15 @@
           addTrashMarker(latLng, "unknown", ref.key(), map);
         });
       }
-      function changeTypeTrash(type){
-          var iconUrl;
+      function changeTypeTrash(){
+          var type = "unknown";
 
-          if(type === 'full'){
-              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored.png?alt=media&token=ef0f6eac-5edb-48f4-9317-6e7213529ea4';
-          }
-          else if(type === 'empty'){
-              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty.png?alt=media&token=c0a29f10-714f-414a-b9ac-5ac9809d9cdf';
-          }
-          else{
-              iconUrl = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown.png?alt=media&token=ed92779a-0feb-4213-9857-3a6af0343794';
-          }
+          if(document.getElementById('test1').checked === true)
+                type = "empty";
+          else
+                type = "full";
+
+          var iconUrl = getUrlByType(type);
 
           selectedMarker.setIcon(iconUrl);
 
@@ -293,6 +298,7 @@
             var updates = {};
             updates['/'+ selectedTrashId + '/type/']  = type;
 
+
             child.ref().update(updates);
             $('#modal1').modal('close');
       }
@@ -305,12 +311,31 @@
     </div>
 
     <!-- Modal Structure -->
-    <div id="modal1" class="modal bottom-sheet">
-        <div class="modal-content">
-            <h4>update trash can information</h4>
-            <a class="waves-effect waves-light btn" onclick="changeTypeTrash('full')">this can is full</a>
-            <a class="waves-effect waves-light btn" onclick="changeTypeTrash('empty');">this can is empty</a>
-            <a class="waves-effect waves-light btn" onclick="changeTypeTrash('unknown');">not full but need clean</a>
+    <div id="modal1" class="modal modal-fixed-footer">
+        <div class="modal-content valign-wrapper">
+          <div class="col s12">
+            <p>The trash bin is ...</p>
+            <p>
+              <input name="trashtypes" type="radio" id="test1" value="empty" />
+              <label for="test1">Empty</label>
+              <input name="trashtypes" type="radio" id="test2" value="full" />
+              <label for="test2">Full</label>
+            </p>
+            <div id="full_cons">
+              <p>Does the trash bin ...</p>
+              <p>
+                <input type="checkbox" class="filled-in" id="smellopt"  />
+                <label for="smellopt">Smell?</label>
+              </p>
+              <p>
+                <input type="checkbox" class="filled-in" id="spaceopt"/>
+                <label for="spaceopt">have space inefficiency?</label>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="changeTypeTrash();">Done</a>
         </div>
     </div>
 
