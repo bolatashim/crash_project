@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html >
+    <head>
+        <meta charset="UTF-8">
+        <title>Leaderboard</title>
+        <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+        <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+
+        
+      <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    </head>
+
+    <body>
+         
+
+        <div class="container">
+            <h2>Leaderboard</h2>
+                        <table class="bordered striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                       ID 
+                                    </th>
+                                    <th>
+                                        POINTS
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="startrows">
+                                </tr>
+                            </tbody>
+                        </table>
+        </div>
+
+
+
+
+        <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="js/materialize.js"></script>
+
+
+        
+        <script>
+        var config = {
+          apiKey: "AIzaSyDtNA7S1roeuXiyO6nKReBxuvc7va5OEUY",
+          authDomain: "crashproject-6d234.firebaseapp.com",
+          databaseURL: "https://crashproject-6d234.firebaseio.com/",
+          storageBucket: "crashproject-6d234.appspot.com"
+        };
+        
+        firebase.initializeApp(config);
+        var database = firebase.database();
+        var usersref = database.ref("users");
+        
+        var userobjects = [];
+
+        usersref.once("value", function(snapshot) {
+            var counter = snapshot.numChildren();
+            snapshot.forEach(function(child) {
+                var apple= child.val();
+                userobjects.push(apple);
+                counter -= 1;
+                if (counter == 0) {
+                    showguys();
+                }
+            });
+        });
+
+        function showguys() {
+            userobjects.sort(function(a, b) {return a["point"] - b["point"]});
+            var toppoint = userobjects[0]["point"];
+            
+            console.log("hshs ")
+            for (var i = 0; i < 3; i++) {
+              var html = '<tr>' + 
+                          '<td><h5>' + userobjects[i]["id"] + '</h5></td>' +
+                          '<td><h5>' + userobjects[i]["point"] + '</5></td>' +
+                        '</tr>';
+              $(html).insertAfter(".startrows");
+            } 
+        }
+       
+
+        </script>
+    </body>
+</html>
