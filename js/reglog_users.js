@@ -8,7 +8,9 @@ $(document).ready(function() {
     storageBucket: "crashproject-6d234.appspot.com"
   };
   firebase.initializeApp(config);
-  
+  var database = firebase.database();
+  var refUser = database.ref("users");
+
   //TODO: messages checking for validity of e-mail address
   //      length of pass should be > 6
 
@@ -26,9 +28,20 @@ $(document).ready(function() {
     const promise = auth.signInWithEmailAndPassword(email, pass);
     promise
       .then(user => window.location="index.html")
-      .catch(e => console.log(e.message));
-      
+      .catch(e => console.log(e.message)); 
   });
+
+  function addUser(user) {
+    refUser.push({
+      id: user.email,
+      point: 0,
+      group: "Daejeon",
+      lng: 100,
+      lat: 100
+    });
+
+    window.location="index.html"
+  }
 
   //registration event listener
   btnregister.addEventListener("click", e => {
@@ -38,9 +51,12 @@ $(document).ready(function() {
 
     const promise = auth.createUserWithEmailAndPassword(email, pass);
     promise
-      .then(user => window.location="index.html")
+      .then(user => addUser(user))
       .catch(e => console.log(e.message));
   });
+
+
+
 
 
 });
