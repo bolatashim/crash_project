@@ -44,10 +44,11 @@
         timestamp: null,
         lat: null,
         lng: null,
-        type: null,
+        type: "unknown",
       };
 
       var map=null;
+      var selectedTrashId = null;
 
       /**
       * Starting point for running the program. Authenticates the user.
@@ -134,12 +135,12 @@
                 var receivedData = child.val();
                 var latLng = new google.maps.LatLng(receivedData.lat,receivedData.lng);
 
-                addTrashMarker(latLng, receivedData.type, map);
+                addTrashMarker(latLng, receivedData.type, child.key(), map);
             });
         });
       }
 
-      function addTrashMarker(pos, type, map){
+      function addTrashMarker(pos, type, key, map){
           var iconUrl;
 
           if(type === 'full'){
@@ -159,7 +160,9 @@
                   url: iconUrl
               }
           });
-          marker.addListener('click', function() {
+
+          marker.addListener('click', function(e) {
+              selectedTrashId = key;
               popUpButtons();
           });
       }
@@ -251,20 +254,29 @@
               lat : data.lat,
               lng : data.lng,
           };
-          addTrashMarker(latLng, "unknown", map);
         getTimestamp(function(timestamp) {
           // Add the new timestamp to the record data.
           data.timestamp = timestamp;
+
           var ref = firebase.child('pos').push(data, function(err) {
             if (err) {  // Data was not written to firebase.
               console.warn(err);
             }
           });
+          addTrashMarker(latLng, "unknown", ref.key(), map);
         });
+      }
+      function changeTypeTrash(type){
+          var child = firebase.child('pos');
 
-        function changeTypeTrash(){
+          // Get a key for a new Post.
+            var newPostKey = child.push().key;
 
-        }
+            // Write the new post's data simultaneously in the posts list and the user's post list.
+            var updates = {};
+            updates['/'+ selectedTrashId + '/type/']  = type;
+
+            child.ref().update(updates);
       }
     </script>
 
@@ -278,9 +290,9 @@
     <div id="modal1" class="modal bottom-sheet">
         <div class="modal-content">
             <h4>update trash can information</h4>
-            <a class="waves-effect waves-light btn">this can is full</a>
-            <a class="waves-effect waves-light btn">this can is empty</a>
-            <a class="waves-effect waves-light btn">not full but need clean</a>
+            <a class="waves-effect waves-light btn" onclick="changeTypeTrash('full')">this can is full</a>
+            <a class="waves-effect waves-light btn" onclick="changeTypeTrash('empty');">this can is empty</a>
+            <a class="waves-effect waves-light btn" onclick="changeTypeTrash('unknown');">not full but need clean</a>
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
