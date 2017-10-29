@@ -13,6 +13,6 @@
 
 #### Implementation File : [IMPLEMENTATION](https://docs.google.com/document/d/19QHnjQo5zQsYTWkahTqoQsWmD-EGmCaLCB-QBurz7hQ/edit)
 
-#### Our Github : [crash_project](https://github.com/bolatashim/crash_project)
+#### Github : [crash_project](https://github.com/bolatashim/crash_project)
 
 ---
