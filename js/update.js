@@ -13,13 +13,14 @@ $(document).ready(function(){
     $("thead").remove();
     $("tbody").remove();
     $("#update_table").attr("opacity",0);
-    $("table").append("<thead><tr><th>Update</th><th>Time</th></tr></thead>\
+    $("table").append("<thead><tr><th>Update</th><th>Time</th><th>Thanks To</th></tr></thead>\
     <tbody></tbody>");
 
     snapshot.forEach(row => {
       str = "<tr>";
       str +="<td>" + row.val()["text"] +"</td>";
       str +="<td>" + row.val()["time"] +"</td>";
+      str +="<td>" + row.val()["mayor"] +"</td>";
       str += "</tr>"
 
       $("tbody").append(str);
