@@ -328,7 +328,7 @@
 
           if(document.getElementById('test1').checked === false &&
              document.getElementById('test2').checked === false)
-                type = "unknown";
+                return;
           else if(document.getElementById('test1').checked === true)
                 type = "empty";
           else
