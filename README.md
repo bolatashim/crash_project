@@ -5,5 +5,5 @@
 
 #### Contributors: @wkdtjsgur100, @bolatashim, @marching0531, @junmin05, @kvtoraman, @LeeGeunHAHAHA
 
-
+#### PPT File : [5min Pitch](https://docs.google.com/presentation/d/15diPz1SFv9_OW1NmabxuLZcT16S3wGXkO_GG-T8xJ4E/edit#slide=id.g2742b97cfc_0_0)
 ---
