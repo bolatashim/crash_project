@@ -27,8 +27,8 @@ $(document).ready(function() {
     const auth = firebase.auth();
     const promise = auth.signInWithEmailAndPassword(email, pass);
     promise
-      .then(user => window.location="index.html")
-      .catch(e => console.log(e.message)); 
+      .then(user => window.location="map.html")
+      .catch(e => console.log(e.message));
   });
 
   function addUser(user) {
@@ -40,7 +40,7 @@ $(document).ready(function() {
       lat: 50
     });
 
-    window.location="index.html"
+    window.location="map.html"
   }
 
   //registration event listener

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+      <title>Starter Template - Materialize</title>
+
+      <!-- CSS  -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 60%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .fixed-action-btn{
+        bottom:250px;/*desired value*/
+      }
+    </style>
+  </head>
+  <body>
+
+    <header>
+     <div class="navbar-fixed" style="z-index: 9999;">
+          <nav>
+            <div class="nav-wrapper container center-align" style="margin:0; padding:0; width:100%;"><a id="logo-container" href="#" class="brand-logo" style="color: white;">C-Rash</a>
+
+              <ul id="slide-out" class="side-nav fixed">
+                <li><div class="userView" style="margin:0">
+                      <div class="background" style="background-color: gray">
+                        <!-- <img src=""> -->
+                      </div>
+                      <a href="#!user"><img class="circle" src="https://cdn3.iconfinder.com/data/icons/gray-toolbar-3/512/user-512.png"></a>
+                      <a href="#!name"><span class="white-text name">Name:</span></a>
+                      <a href="#!score"><span class="white-text email">Score:</span></a>
+                      </div>
+                </li>
+                <li><a class="waves-effect" href="#!">Map</a></li>
+                <li><a class="waves-effect" href="mypage.html">Mypage</a></li>
+                <li><a class="waves-effect" href="leader.html">Leaderboard</a></li>
+              </ul>
+              <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons" style="color: white">menu</i></a>
+
+            </div>
+          </nav>
+      </div>
+    </header>
+
+
+    <div id="map"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+    <script>
+      /**
+      * Reference to Firebase database.
+      * @const
+      */
+  var config = {
+    apiKey: "AIzaSyDtNA7S1roeuXiyO6nKReBxuvc7va5OEUY",
+    authDomain: "crashproject-6d234.firebaseapp.com",
+    databaseURL: "https://crashproject-6d234.firebaseio.com/",
+    storageBucket: "crashproject-6d234.appspot.com"
+  };
+  firebase.initializeApp(config);
+
+  var database = firebase.database();
+
+  var userEmail = null;
+
+  firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        userEmail = user.email;
+      } else {
+      }
+	});
+      /**
+      * Data object to be written to Firebase.
+      */
+      var data = {
+        sender: null,
+        timestamp: null,
+        lat: null,
+        lng: null,
+        type: "unknown",
+        message: "",
+      };
+
+      var map=null;
+      var selectedTrashId = null;
+      var selectedMarker=null;
+
+      function changepoints(idval, points) {
+          var usersref = database.ref("users");
+          usersref.once("value", function(snap) {
+              snap.forEach(function(child) {
+                  var userdata = child.val();
+
+                  if (userdata["id"] == idval) {
+                      var newpoint = userdata["point"] + points;
+                      var city = userdata["group"];
+                      database.ref("groups/").once("value", function(snap) {
+                        snap.forEach(function(child) {
+                          if (child.key == city) {
+                            var oldpoint = child.val().totalpoint;
+                            database.ref("groups/" + city + "/").update({totalpoint: oldpoint + points});
+                          }
+                        });
+                      });
+                      database.ref('users/' + child.key).set({
+                        ...userdata,
+                        point: newpoint
+                      });
+                  }
+              });
+          });
+
+
+
+      }
+
+      function addPointOnUserPoint(point){
+        changepoints(userEmail, 100);
+      }
+      /**
+      * Starting point for running the program. Authenticates the user.
+      * @param {function()} onAuthSuccess - Called when authentication succeeds.
+      */
+      function getUrlByType(type){
+          var url;
+
+          if(type === 'full'){
+              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Full_1_colored_resized.png?alt=media&token=013a1556-eb12-496c-b9cf-57dcb1a50667';
+          }
+          else if(type === 'empty'){
+              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Empty_colored_resized.png?alt=media&token=37e6e034-7a48-4bba-956f-631c34edd73f';
+          }
+          else{
+              url = 'https://firebasestorage.googleapis.com/v0/b/crashproject-6d234.appspot.com/o/Unknown_resized.png?alt=media&token=145c33a7-60b2-42ff-ba72-0ab5dac21b2f';
+          }
+          return url;
+      }
+
+      function initAuthentication(onAuthSuccess) {
+      }
+
+      /**
+       * Creates a map object with a click listener and a heatmap.
+       */
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 33.5003211, lng: 126.5300339},
+          zoom: 20,
+          styles: [{
+            featureType: 'poi',
+            stylers: [{ visibility: 'off' }]  // Turn off POI.
+          },
+          {
+            featureType: 'transit.station',
+            stylers: [{ visibility: 'off' }]  // Turn off bus, train stations etc.
+          }],
+          disableDoubleClickZoom: true,
+          streetViewControl: false,
+          zoomControl: true,
+          zoomControlOptions: {
+              position: google.maps.ControlPosition.LEFT_BOTTOM
+          },
+        });
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    map.setCenter(pos);
+
+                    var marker = new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        draggable: true,
+                    });
+                    data.lat = pos.lat;
+                    data.lng = pos.lng;
+
+                    google.maps.event.addListener(marker, 'drag', function(event){
+                        data.lat = event.latLng.lat();
+                        data.lng = event.latLng.lng();
+                    });
+
+                    //addToFirebase(data);
+                }, function() {
+                });
+        }
+        else {
+        }
+
+        // Create a heatmap.
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+          data: [],
+          map: map,
+          radius: 16
+        });
+
+        initAuthentication(initFirebase.bind(undefined, heatmap));
+        // load locations informations
+        var loc = database.ref("pos");
+
+        loc.once("value", function(snapshot) {
+            snapshot.forEach(function(child) {
+                var receivedData = child.val();
+                var latLng = new google.maps.LatLng(receivedData.lat,receivedData.lng);
+
+                addTrashMarker(latLng, receivedData.type, child.key, map);
+            });
+        });
+
+
+
+
+
+      }
+
+      function addTrashMarker(pos, type, key, map){
+          var iconUrl = getUrlByType(type);
+
+          var marker = new google.maps.Marker({
+              position: pos,
+              map: map,
+              icon: {
+                  url: iconUrl,
+              }
+          });
+
+          marker.addListener('click', function(e) {
+              selectedTrashId = key;
+              selectedMarker = marker;
+              popUpButtons();
+          });
+      }
+
+      /**
+       * Set up a Firebase with deletion on clicks older than expirySeconds
+       * @param {!google.maps.visualization.HeatmapLayer} heatmap The heatmap to
+       * which points are added from Firebase.
+       */
+      function initFirebase(heatmap) {
+        // 10 minutes before current time.
+        var startTime = new Date().getTime() - (60 * 10 * 1000);
+
+        // Reference to the clicks in Firebase.
+        var clicks = firebase.child('pos');
+
+        // Listener for when a click is added.
+        clicks.orderByChild('timestamp').startAt(startTime).on('child_added',
+          function(snapshot) {
+            console.log(snapshot);
+            // Get that click from firebase.
+            var newPosition = snapshot.val();
+            var point = new google.maps.LatLng(newPosition.lat, newPosition.lng);
+            var elapsed = new Date().getTime() - newPosition.timestamp;
+
+            // Add the point to  the heatmap.
+            heatmap.getData().push(point);
+
+            // Requests entries older than expiry time (10 minutes).
+            var expirySeconds = Math.max(60 * 10 * 1000 - elapsed, 0);
+            // Set client timeout to remove the point after a certain time.
+            window.setTimeout(function() {
+              // Delete the old point from the database.
+              snapshot.ref().remove();
+            }, expirySeconds);
+          }
+        );
+
+        // Remove old data from the heatmap when a point is removed from firebase.
+        clicks.on('child_removed', function(snapshot, prevChildKey) {
+          var heatmapData = heatmap.getData();
+          var i = 0;
+          while (snapshot.val().lat != heatmapData.getAt(i).lat()
+            || snapshot.val().lng != heatmapData.getAt(i).lng()) {
+            i++;
+          }
+          heatmapData.removeAt(i);
+        });
+      }
+      function popUpButtons(){
+          console.log("popup!!!");
+          $('#modal1').modal('open');
+      }
+
+
+      /**
+       * Adds a click to firebase.
+       * @param {Object} data The data to be added to firebase.
+       *     It contains the lat, lng, sender and timestamp.
+       */
+      function addToFirebase() {
+          console.log("added");
+          var latLng = {
+              lat : data.lat,
+              lng : data.lng,
+          };
+          // Add the new timestamp to the record data.
+          data.timestamp = new Date().getTime();
+
+          var ref = database.ref('pos').push(data, function(err) {
+            if (err) {  // Data was not written to firebase.
+              console.warn(err);
+            }
+          });
+          addTrashMarker(latLng, "unknown", ref.key, map);
+      }
+      function changeTypeTrash(){
+          var type = "unknown";
+
+          if(document.getElementById('test1').checked === false &&
+             document.getElementById('test2').checked === false)
+                return;
+          else if(document.getElementById('test1').checked === true)
+                type = "empty";
+          else
+                type = "full";
+
+          var iconUrl = getUrlByType(type);
+
+          selectedMarker.setIcon(iconUrl);
+
+
+          var child = database.ref('pos');
+
+          // Get a key for a new Post.
+            var newPostKey = child.push().key;
+
+            // Write the new post's data simultaneously in the posts list and the user's post list.
+            var updates = {};
+            updates['/'+ selectedTrashId + '/type/']  = type;
+
+
+            child.update(updates);
+            $('#modal1').modal('close');
+
+            addPointOnUserPoint(100);
+      }
+    </script>
+
+    <div class="fixed-action-btn click-to-toggle">
+      <a class="btn-floating btn-large red">
+        <i class="material-icons" onclick="addToFirebase();">add</i>
+      </a>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal modal-fixed-footer">
+        <div class="modal-content valign-wrapper">
+          <div class="col s12">
+            <p>The trash bin is ...</p>
+            <p>
+              <input name="trashtypes" type="radio" id="test1" value="empty" />
+              <label for="test1">Empty</label>
+              <input name="trashtypes" type="radio" id="test2" value="full" />
+              <label for="test2">Full</label>
+            </p>
+            <div id="full_cons">
+              <p>Does the trash bin ...</p>
+              <p>
+                <input type="checkbox" class="filled-in" id="smellopt"  />
+                <label for="smellopt">Smell?</label>
+              </p>
+              <p>
+                <input type="checkbox" class="filled-in" id="spaceopt"/>
+                <label for="spaceopt">have space inefficiency?</label>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="changeTypeTrash();">Done</a>
+        </div>
+    </div>
+
+    <footer id="update-bar" class="page-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Updated Log</h5>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <ul>
+                    <li><p class="grey-text text-lighten-3" href="#!">You got 1000 points!!</p></li>
+                  <li><p class="grey-text text-lighten-3" href="#!">Kamil updated trash can status to 'empty'</p></li>
+                  <li><p class="grey-text text-lighten-3" href="#!">A trash can has been installed at the Jeju cityhall</p></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZudCkhX8Okld9JFRnd-_IV9Y4uznZbM8&libraries=visualization&callback=initMap">
+    </script>
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="js/materialize.js"></script>
+    <script src="js/init.js"></script>
+
+
+  </body>
+</html>
